@@ -1,3 +1,6 @@
+Fork note: This fork was created to add the german qwertz keyboard adjacency graph and possibly other non-qwerty layouts.
+
+
 ```
 _________________________________________________/\/\___________________
 _/\/\/\/\/\__/\/\__/\/\____/\/\/\/\__/\/\__/\/\__/\/\________/\/\/\/\___
