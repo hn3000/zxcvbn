@@ -10,24 +10,39 @@ _/\/\/\/\/\__/\/\__/\/\____/\/\/\/\______/\______/\/\/\/\____/\/\__/\/\_
 ________________________________________________________________________
 ```
 
-[![Build Status](https://travis-ci.org/dropbox/zxcvbn.svg?branch=master)](https://travis-ci.org/dropbox/zxcvbn)  
+[![Build Status](https://travis-ci.org/dropbox/zxcvbn.svg?branch=master)](https://travis-ci.org/dropbox/zxcvbn)
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/dropbox-zxcvbn.svg)](https://saucelabs.com/u/dropbox-zxcvbn)
 
-`zxcvbn` is a password strength estimator inspired by password crackers. Through pattern matching and conservative entropy calculations, it recognizes and weighs 10k common passwords, common names and surnames according to US census data, popular English words, and other common patterns like dates, repeats (`aaa`), sequences (`abcd`), keyboard patterns (`qwertyuiop`), and l33t speak.
+`zxcvbn` is a password strength estimator inspired by password crackers. Through pattern matching and conservative estimation, it recognizes and weighs 30k common passwords, common names and surnames according to US census data, popular English words from Wikipedia and US television and movies, and other common patterns like dates, repeats (`aaa`), sequences (`abcd`), keyboard patterns (`qwertyuiop`), and l33t speak.
 
-Consider using zxcvbn as an algorithmic alternative to password policy — it is more secure, flexible, and usable when sites require a minimal complexity score in place of annoying rules like "passwords must contain three of {lower, upper, numbers, symbols}".
+Consider using zxcvbn as an algorithmic alternative to password composition policy — it is more secure, flexible, and usable when sites require a minimal complexity score in place of annoying rules like "passwords must contain three of {lower, upper, numbers, symbols}".
 
 * __More secure__: policies often fail both ways, allowing weak passwords (`P@ssword1`) and disallowing strong passwords.
-* __More flexible__: zxcvbn allows many password styles to flourish so long as it detects sufficient complexity — passphrases are rated highly given enough uncommon words, keyboard patterns are either terrible or great depending on length and number of turns, and capitalization adds more complexity when it's unpredictaBle. Neither crackers nor zxcvbn are fooled by `'@'` for `'a'` or `'0'` for `'o'`.
-* __More usable__: Dumping a list of password rules onto users hurts usability. Understanding and satisfying said rules can be time-consuming and frustrating, leading to passwords that are [harder to remember](https://xkcd.com/936/). Use zxcvbn instead to build simple, rule-free interfaces that give instant feedback.
+* __More flexible__: zxcvbn allows many password styles to flourish so long as it detects sufficient complexity — passphrases are rated highly given enough uncommon words, keyboard patterns are ranked based on length and number of turns, and capitalization adds more complexity when it's unpredictaBle.
+* __More usable__: zxcvbn is designed to power simple, rule-free interfaces that give instant feedback. In addition to strength estimation, zxcvbn includes minimal, targeted verbal feedback that can help guide users towards less guessable passwords.
 
-At Dropbox we use zxcvbn on our [signup page](https://www.dropbox.com/register) and change/reset password flows. zxcvbn is designed for node and the browser, but we use our [python port](https://github.com/dropbox/python-zxcvbn) inside the Dropbox desktop client, [Objective C port](https://github.com/dropbox/zxcvbn-ios) in our iOS app, and Java port (not yet open sourced) on Android.
+For further detail and motivation, please refer to the USENIX Security '16 [paper and presentation](https://www.usenix.org/conference/usenixsecurity16/technical-sessions/presentation/wheeler).
 
-[Release notes](https://github.com/dropbox/zxcvbn/releases)
+At Dropbox we use zxcvbn ([Release notes](https://github.com/dropbox/zxcvbn/releases)) on our web, desktop, iOS and Android clients. If JavaScript doesn't work for you, others have graciously ported the library to these languages:
 
-For more motivation, see:
+* [`zxcvbn-python`](https://github.com/dwolfhub/zxcvbn-python) (Python)
+* [`zxcvbn-cpp`](https://github.com/rianhunter/zxcvbn-cpp) (C/C++/Python/JS)
+* [`zxcvbn-c`](https://github.com/tsyrogit/zxcvbn-c) (C/C++)
+* [`zxcvbn-rs`](https://github.com/shssoichiro/zxcvbn-rs) (Rust)
+* [`zxcvbn-go`](https://github.com/nbutton23/zxcvbn-go) (Go)
+* [`zxcvbn4j`](https://github.com/nulab/zxcvbn4j) (Java)
+* [`nbvcxz`](https://github.com/GoSimpleLLC/nbvcxz) (Java)
+* [`zxcvbn-ruby`](https://github.com/envato/zxcvbn-ruby) (Ruby)
+* [`zxcvbn-js`](https://github.com/bitzesty/zxcvbn-js) (Ruby [via ExecJS])
+* [`zxcvbn-ios`](https://github.com/dropbox/zxcvbn-ios) (Objective-C)
+* [`zxcvbn-cs`](https://github.com/mickford/zxcvbn-cs) (C#/.NET)
+* [`szxcvbn`](https://github.com/tekul/szxcvbn) (Scala)
+* [`zxcvbn-php`](https://github.com/bjeavons/zxcvbn-php) (PHP)
+* [`zxcvbn-api`](https://github.com/wcjr/zxcvbn-api) (REST)
+* [`ocaml-zxcvbn`](https://github.com/cryptosense/ocaml-zxcvbn) (OCaml bindings for `zxcvbn-c`)
 
-http://tech.dropbox.com/?p=165
+Integrations with other frameworks:
+* [`angular-zxcvbn`](https://github.com/ghostbar/angular-zxcvbn) (AngularJS)
 
 # Installation
 
@@ -35,7 +50,7 @@ zxcvbn detects and supports CommonJS (node, browserify) and AMD (RequireJS). In 
 
 ## Bower
 
-Install [`node`](https://nodejs.org/download/) and [`bower`](http://bower.io/) if you haven't already. This won't make your codebase dependent on node or bower.
+Install [`node`](https://nodejs.org/download/) and [`bower`](http://bower.io/) if you haven't already.
 
 Get `zxcvbn`:
 
@@ -47,11 +62,11 @@ bower install zxcvbn
 Add this script to your `index.html`:
 
 ``` html
-<script type="text/javascript" src="bower_components/zxcvbn/dist/zxcvbn.js">
+<script src="bower_components/zxcvbn/dist/zxcvbn.js">
 </script>
 ```
 
-To make sure it loaded properly, open your html in a browser and type `zxcvbn('Tr0ub4dour&3')` into the console.
+To make sure it loaded properly, open in a browser and type `zxcvbn('Tr0ub4dour&3')` into the console.
 
 To pull in updates and bug fixes:
 
@@ -59,7 +74,7 @@ To pull in updates and bug fixes:
 bower update zxcvbn
 ```
 
-## Node / npm
+## Node / npm / MeteorJS
 
 zxcvbn works identically on the server.
 
@@ -120,35 +135,75 @@ Download [zxcvbn.js](https://raw.githubusercontent.com/dropbox/zxcvbn/master/dis
 Add to your .html:
 
 ``` html
-<script type="text/javascript" src="path/to/zxcvbn.js">
-</script>
+<script type="text/javascript" src="path/to/zxcvbn.js"></script>
 ```
 
 # Usage
+
+[try zxcvbn interactively](https://lowe.github.io/tryzxcvbn/) to see these docs in action.
 
 ``` javascript
 zxcvbn(password, user_inputs=[])
 ```
 
-`zxcvbn()` takes one required argument, a password, and returns a result object. The result includes a few properties:
+`zxcvbn()` takes one required argument, a password, and returns a result object with several properties:
 
 ``` coffee
-result.entropy            # bits
+result.guesses            # estimated guesses needed to crack password
+result.guesses_log10      # order of magnitude of result.guesses
 
-result.crack_time         # estimation of actual crack time, in seconds.
+result.crack_times_seconds # dictionary of back-of-the-envelope crack time
+                          # estimations, in seconds, based on a few scenarios:
+{
+  # online attack on a service that ratelimits password auth attempts.
+  online_throttling_100_per_hour
 
-result.crack_time_display # same crack time, as a friendlier string:
-                          # "instant", "6 minutes", "centuries", etc.
+  # online attack on a service that doesn't ratelimit,
+  # or where an attacker has outsmarted ratelimiting.
+  online_no_throttling_10_per_second
 
-result.score              # [0,1,2,3,4] if crack time is less than
-                          # [10**2, 10**4, 10**6, 10**8, Infinity].
-                          # (useful for implementing a strength bar.)
+  # offline attack. assumes multiple attackers,
+  # proper user-unique salting, and a slow hash function
+  # w/ moderate work factor, such as bcrypt, scrypt, PBKDF2.
+  offline_slow_hashing_1e4_per_second
 
-result.match_sequence     # the list of patterns that zxcvbn based the
-                          # entropy calculation on.
+  # offline attack with user-unique salting but a fast hash
+  # function like SHA-1, SHA-256 or MD5. A wide range of
+  # reasonable numbers anywhere from one billion - one trillion
+  # guesses per second, depending on number of cores and machines.
+  # ballparking at 10B/sec.
+  offline_fast_hashing_1e10_per_second
+}
 
-result.calc_time          # how long it took zxcvbn to calculate an answer,
-                          # in milliseconds.
+result.crack_times_display # same keys as result.crack_times_seconds,
+                           # with friendlier display string values:
+                           # "less than a second", "3 hours", "centuries", etc.
+
+result.score      # Integer from 0-4 (useful for implementing a strength bar)
+
+  0 # too guessable: risky password. (guesses < 10^3)
+
+  1 # very guessable: protection from throttled online attacks. (guesses < 10^6)
+
+  2 # somewhat guessable: protection from unthrottled online attacks. (guesses < 10^8)
+
+  3 # safely unguessable: moderate protection from offline slow-hash scenario. (guesses < 10^10)
+
+  4 # very unguessable: strong protection from offline slow-hash scenario. (guesses >= 10^10)
+
+result.feedback   # verbal feedback to help choose better passwords. set when score <= 2.
+
+  result.feedback.warning     # explains what's wrong, eg. 'this is a top-10 common password'.
+                              # not always set -- sometimes an empty string
+
+  result.feedback.suggestions # a possibly-empty list of suggestions to help choose a less
+                              # guessable password. eg. 'Add another word or two'
+
+result.sequence   # the list of patterns that zxcvbn based the
+                  # guess calculation on.
+
+result.calc_time  # how long it took zxcvbn to calculate an answer,
+                  # in milliseconds.
 ````
 
 The optional `user_inputs` argument is an array of strings that zxcvbn will treat as an extra dictionary. This can be whatever list of strings you like, but is meant for user inputs from other fields of the form, like name and email. That way a password that includes a user's personal information can be heavily penalized. This list is also good for site-specific vocabulary — Acme Brick Co. might want to include ['acme', 'brick', 'acmebrick', etc].
@@ -161,26 +216,27 @@ zxcvbn operates below human perception of delay for most input: ~5-20ms for ~25 
 
 ## script load latency
 
-`zxcvbn.js` bundled and minified is about 320kb gzipped or 680kb uncompressed, most of which is dictionaries. Consider these tips if you're noticing page load latency on your site.
+`zxcvbn.js` bundled and minified is about 400kB gzipped or 820kB uncompressed, most of which is dictionaries. Consider these tips if you're noticing page load latency on your site.
 
-* Make sure your server is configured to compress static assets for browsers that support it. ([nginx tutorial](https://rtcamp.com/tutorials/nginx/enable-gzip/), [apache/IIS tutorial](http://betterexplained.com/articles/how-to-optimize-your-site-with-gzip-compression/).)
+* Make sure your server is configured to compress static assets for browsers that support it. ([nginx tutorial](https://rtcamp.com/tutorials/nginx/enable-gzip/), [Apache/IIS tutorial](http://betterexplained.com/articles/how-to-optimize-your-site-with-gzip-compression/).)
 
 Then try one of these alternatives:
 
-1. Put your `<script src="zxcvbn.js">` tag at the end of your html, just before the closing `</body>` tag. This insures your page loads and renders before the browser fetches and loads `zxcvbn.js`. The downside with this approach is `zxcvbn()` becomes available later than had it been included in `<head>` — not an issue on most signup pages where users are filling out other fields first.
+1. Put your `<script src="zxcvbn.js">` tag at the end of your html, just before the closing `</body>` tag. This ensures your page loads and renders before the browser fetches and loads `zxcvbn.js`. The downside with this approach is `zxcvbn()` becomes available later than had it been included in `<head>` — not an issue on most signup pages where users are filling out other fields first.
 
-2. If you're using requirejs, try loading `zxcvbn.js` separately from your main bundle. Something to watch out for: if `zxcvbn.js` is required inside a keyboard handler waiting for user input, the entire script might be loaded only after the user presses their first key, creating nasty latency. Avoid this by calling your handler once upon page load, independent of user input, such that the `requirejs()` call runs earlier.
+2. If you're using RequireJS, try loading `zxcvbn.js` separately from your main bundle. Something to watch out for: if `zxcvbn.js` is required inside a keyboard handler waiting for user input, the entire script might be loaded only after the user presses their first key, creating nasty latency. Avoid this by calling your handler once upon page load, independent of user input, such that the `requirejs()` call runs earlier.
 
 3. Use the HTML5 [`async`](http://www.w3schools.com/tags/att_script_async.asp) script attribute. Downside: [doesn't work](http://caniuse.com/#feat=script-async) in IE7-9 or Opera Mini.
 
-4. Include an inline `<script>` in `<head>` that asynchronously loads `zxcvbn.js` in the background. Despite the extra code I prefer this over (3) because it works in older browsers.
+4. Include an inline `<script>` in `<head>` that asynchronously loads `zxcvbn.js` in the background. Advantage over (3): it works in older browsers.
 
 ``` javascript
 // cross-browser asynchronous script loading for zxcvbn.
 // adapted from http://friendlybit.com/js/lazy-loading-asyncronous-javascript/
 
 (function() {
-  var ZXCVBN_SRC = 'path/to/zxcvbn.js';   // eg. for a standard bower setup, 'bower_components/zxcvbn/zxcvbn.js'
+
+  var ZXCVBN_SRC = 'path/to/zxcvbn.js';
 
   var async_load = function() {
     var first, s;
@@ -224,13 +280,11 @@ For node developers, in addition to `dist`, the zxcvbn `npm` module includes a `
 
 # Acknowledgments
 
-Dropbox for supporting open source!
+[Dropbox](https://dropbox.com) for supporting open source!
 
-Leah Culver and Ryan Pearl for porting zxcvbn to [Objective C](https://github.com/dropbox/zxcvbn-ios) and [python](https://github.com/dropbox/python-zxcvbn).
+Mark Burnett for releasing his 10M password corpus and for his 2005 book, [Perfect Passwords: Selection, Protection, Authentication](http://www.amazon.com/Perfect-Passwords-Selection-Protection-Authentication/dp/1597490415).
 
-Mark Burnett for releasing his [10k top passwords list](http://xato.net/passwords/more-top-worst-passwords) and for his 2006 book, [Perfect Passwords: Selection, Protection, Authentication](http://www.amazon.com/Perfect-Passwords-Selection-Protection-Authentication/dp/1597490415).
-
-Wiktionary contributors for building a [frequency list of English](http://en.wiktionary.org/wiki/Wiktionary:Frequency_lists) as used in television and movies.
+Wiktionary contributors for building a [frequency list of English words](http://en.wiktionary.org/wiki/Wiktionary:Frequency_lists) as used in television and movies.
 
 Researchers at Concordia University for [studying password estimation rigorously](http://www.concordia.ca/cunews/main/stories/2015/03/25/does-your-password-pass-muster.html) and recommending zxcvbn.
 
